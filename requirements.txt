@@ -1,0 +1,17 @@
+torch
+torchaudio
+pyannote.audio
+fastapi
+uvicorn[standard]
+python-multipart
+soundfile
+librosa
+numpy
+python-dotenv
+spaces
+torchcodec
+huggingface-hub
+pyloudnorm
+speechbrain
+
+git+https://github.com/dmlguq456/SR_CorrNet_SS.git

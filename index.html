@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HearUsOut | Multi-Speaker Speech Separation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="toast-container" id="toast-container"></div>
+
+    <div class="container">
+        <header class="header">
+            <h1 class="title">HearUsOut</h1>
+            <p class="subtitle">Multi-Speaker Voice Separation</p>
+        </header>
+
+        <!-- VIEW 1: Upload -->
+        <main id="upload-view" class="view active card">
+            <input type="file" id="file-input" accept="audio/*" style="display: none;">
+            
+            <div id="drop-zone" class="upload-zone">
+                <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                </svg>
+                <div class="upload-text">Drop your mixed audio here</div>
+                <div class="upload-subtext">or click to browse files</div>
+            </div>
+
+            <div id="file-info" class="file-info">
+                <div class="file-name">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                    </svg>
+                    <span id="filename-display">No file selected</span>
+                </div>
+                <button class="btn-secondary" id="btn-remove" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Change</button>
+            </div>
+
+            <!-- Target Voice Sample Dropzone (Optional) -->
+            <input type="file" id="target-file-input" accept="audio/*" style="display: none;">
+            <div id="target-drop-zone" class="upload-zone" style="min-height: 80px; padding: 1rem; margin-top: 1rem; border-style: dashed; border-width: 2px; border-color: rgba(6, 182, 212, 0.3);">
+                <div class="upload-text" style="font-size: 1rem; color: var(--accent-cyan);">+ Add Target Voice Sample (Optional)</div>
+                <div class="upload-subtext" style="font-size: 0.8rem;">Upload a 5-sec clean clip of a specific person to ONLY extract them.</div>
+            </div>
+            <div id="target-file-info" class="file-info" style="display: none; margin-top: 0.5rem; background: rgba(6, 182, 212, 0.05); border: 1px solid rgba(6, 182, 212, 0.2);">
+                <div class="file-name">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <span id="target-filename-display" style="color: var(--accent-cyan); font-weight: 500;">No target file</span>
+                </div>
+                <button class="btn-secondary" id="btn-remove-target" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; border-color: rgba(6, 182, 212, 0.3); color: var(--accent-cyan);">Remove</button>
+            </div>
+
+            <div class="settings-group">
+                <label class="settings-label">Number of Speakers in Audio</label>
+                <div class="pill-selector" id="speaker-selector">
+                    <button class="pill-btn active" data-val="auto">Auto-detect</button>
+                    <button class="pill-btn" data-val="2">2</button>
+                    <button class="pill-btn" data-val="3">3</button>
+                    <button class="pill-btn" data-val="4">4</button>
+                    <button class="pill-btn" data-val="5">5</button>
+                </div>
+            </div>
+
+            <button id="btn-separate" class="btn-primary" disabled>
+                Separate Voices
+            </button>
+            <div style="text-align: center; margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
+                Supports WAV, MP3, FLAC, OGG (Max 5 minutes)
+            </div>
+        </main>
+
+        <!-- VIEW 2: Processing -->
+        <main id="processing-view" class="view card">
+            <div class="processing-content">
+                <div class="loader-ring"></div>
+                <h2 class="status-title" id="status-title">Uploading...</h2>
+                <p class="status-desc" id="status-desc">Initializing AI models...</p>
+                <p style="color: var(--accent-cyan); font-size: 0.9rem; margin-top: 1rem; font-weight: 500;">This takes about 5-10 seconds on GPU</p>
+            </div>
+        </main>
+
+        <!-- VIEW 3: Results -->
+        <main id="results-view" class="view">
+            <div class="results-header card" style="padding: 1.5rem 2rem; border-radius: 16px; margin-bottom: 2rem;">
+                <div>
+                    <span id="res-badge" class="badge">✨ 3 Speakers Detected</span>
+                </div>
+                <div id="res-model" class="model-info">Model: SepFormer</div>
+            </div>
+
+            <div id="speakers-grid" class="speakers-grid">
+                <!-- Speaker cards generated by JS -->
+            </div>
+
+            <div class="action-bar">
+                <a id="btn-download-all" href="#" class="btn-primary" style="text-align: center; text-decoration: none;">Download All as ZIP</a>
+                <button id="btn-reset" class="btn-secondary">Separate Another</button>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
