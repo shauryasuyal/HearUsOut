@@ -4,6 +4,9 @@
 
 HearUsOut is a state-of-the-art speech separation system capable of untangling up to 5 concurrent speakers from a single audio mixture. It features a completely decoupled architecture with a stunning vanilla frontend and a heavy-duty PyTorch backend powered by a fine-tuned `SR_CorrNet` model.
 
+Website Link: https://hearusout.netlify.app/
+HuggingFace Link: https://huggingface.co/spaces/shauryasuyal/HearUsOut_AIMS
+Video Demo: https://drive.google.com/file/d/1K5Eu96mO2H1naJfL6k6zxleB4FN-voIN/view?usp=sharing
 ---
 
 ## Key Features & Novelties
