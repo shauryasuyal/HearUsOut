@@ -18,7 +18,7 @@ Video Demo: https://drive.google.com/file/d/1K5Eu96mO2H1naJfL6k6zxleB4FN-voIN/vi
 Instead of relying on clunky, heavily-gated external Voice Activity Detection (VAD) models like Pyannote, HearUsOut leverages the native `is_var_spks=True` property of the `SR_CorrNet_SS` model. By forcing a maximum 5-channel separation and dynamically computing RMS energy thresholding on the output tracks, the system flawlessly filters out silent tracks and auto-detects the true number of active speakers.
 
 ### Zero-Shot Targeted Voice Extraction
-Instead of just separating everyone blindly, the system integrates a state-of-the-art Speaker Verification network (`ECAPA-TDNN`). By uploading a short reference clip of one speaker, the system generates dense feature embeddings, compares cosine similarity against the separated tracks, and automatically extracts **only** that specific person.
+Instead of just separating everyone blindly, the system integrates a state-of-the-art Speaker Verification network (`ECAPA-TDNN`). By uploading a short reference clip of one speaker, the system generates dense feature embeddings, compares cosine similarity against the separated tracks, and automatically extracts **only** that specific person. This is one of the novelties of our project.
 
 ### Heuristic Adaptive Preprocessing Engine
 Before audio even hits the separation model, our engine automatically detects and fixes corrupted inputs:
