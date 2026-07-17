@@ -147,11 +147,24 @@ def process_audio(audio_path, requested_speakers, target_voice_path=None):
             energies.append(audio)
             
         if auto_detect:
-            # Find the loudest track
-            max_energy = max([np.mean(a**2) for a in energies])
-            # Keep tracks that have at least 1% of the max energy
-            threshold = max_energy * 0.01
-            valid_audios = [a for a in energies if np.mean(a**2) > threshold]
+            # Find the loudest track's energy
+            energies_vals = [np.mean(a**2) for a in energies]
+            max_energy = max(energies_vals)
+            
+            # 8% energy threshold (approx -11dB) to filter out model leakage/noise
+            threshold = max_energy * 0.08 
+            
+            valid_audios = []
+            # Sort from loudest to quietest
+            sorted_indices = np.argsort([-e for e in energies_vals])
+            
+            for idx in sorted_indices:
+                a = energies[idx]
+                e = energies_vals[idx]
+                # Always keep at least the top 2 loudest tracks, then apply threshold for the rest
+                if len(valid_audios) < 2 or e > threshold:
+                    valid_audios.append(a)
+                    
             msg = f"Auto-detected {len(valid_audios)} active speakers."
         else:
             valid_audios = energies
