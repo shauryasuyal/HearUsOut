@@ -12,7 +12,7 @@ Video Demo: https://drive.google.com/file/d/1K5Eu96mO2H1naJfL6k6zxleB4FN-voIN/vi
 
 ---
 
-## Key Features & Novelties
+# Key Features & Novelties
 
 ### Native AI Auto-Detect (No External VAD Required)
 Instead of relying on clunky, heavily-gated external Voice Activity Detection (VAD) models like Pyannote, HearUsOut leverages the native `is_var_spks=True` property of the `SR_CorrNet_SS` model. By forcing a maximum 5-channel separation and dynamically computing RMS energy thresholding on the output tracks, the system flawlessly filters out silent tracks and auto-detects the true number of active speakers.
